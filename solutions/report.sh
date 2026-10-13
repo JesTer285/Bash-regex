@@ -24,6 +24,8 @@ show_help() {
     echo "  -b, --banlist FILE       Path to banlist.txt"
     echo "  -t, --transactions FILE  Path to transactions.txt"
     echo "  --help                   Show this help message"
+    rmdir "$LOCKDIR" 2>/dev/null
+    exit 0
 }
 
 players() {
@@ -35,7 +37,7 @@ banlist() {
 }
 
 transactions() {
-    TRANSACTIONS_COUNT=$(sort "$1" | uniq | wc -l)
+    TRANSACTIONS_COUNT=$(wc -l < "$1")
     MOST_POPULAR=$(awk '
     {
         count[$5]+=1
@@ -95,3 +97,5 @@ Bans: "$BANNED_COUNT"
 Transactions: "$TRANSACTIONS_COUNT"
 Top item: "$MOST_POPULAR"
 TEXT
+
+rmdir "$LOCKDIR" 2>/dev/null
